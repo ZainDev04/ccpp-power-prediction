@@ -111,8 +111,10 @@ p { margin: 0; }
 .rise .word > span { display: inline-block; will-change: transform; }
 
 /* ---------- loader */
-.loader { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; background: var(--bg); clip-path: inset(0 0 0 0); }
-.loader.gone { display: none; }
+/* the curtain only exists when scripts run; without them the page shows straight away */
+.loader { display: none; }
+.js .loader { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; background: var(--bg); clip-path: inset(0 0 0 0); }
+.js .loader.gone { display: none; }
 .loader-inner { display: grid; justify-items: center; gap: 16px; width: min(320px, 80vw); }
 .loader-mark { width: 54px; height: 54px; }
 .loader-mark rect { fill: var(--raised); stroke: var(--line-strong); }
@@ -149,7 +151,7 @@ p { margin: 0; }
 .theme-toggle:active { transform: rotate(20deg) scale(0.94); }
 .theme-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
 .theme-toggle .sun, .theme-toggle .moon { transform-origin: 12px 12px; transition: transform 0.6s var(--ease-out), opacity 0.4s; }
-:root[data-theme="dark"] .theme-toggle .sun { transform: rotate(-90deg) scale(0.4); opacity: 0; }
+:root:not([data-theme="light"]) .theme-toggle .sun { transform: rotate(-90deg) scale(0.4); opacity: 0; }
 :root[data-theme="light"] .theme-toggle .moon { transform: rotate(90deg) scale(0.4); opacity: 0; }
 
 /* ---------- buttons */
