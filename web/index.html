@@ -2,24 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Plant output predictor</title>
   <meta name="description" content="Predict the net electrical output of a combined cycle power plant from the weather and the condenser reading. A KNN model trained on 7,621 real plant hours, running in your browser.">
-  <meta name="theme-color" content="#0A1118">
+  <meta name="theme-color" content="#0A1118" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#F2F5F8" media="(prefers-color-scheme: light)">
   <meta property="og:title" content="Plant output predictor">
   <meta property="og:description" content="Set the weather, see what a combined cycle power plant will produce, and the six past hours the prediction is based on.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://ccpp-power-prediction.vercel.app/preview.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230A1118'/%3E%3Cpath d='M7 21c4-1 6-9 9-9s5 6 9 5' fill='none' stroke='%23F2A33A' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <script>
+    // set the theme before first paint: saved choice, else the device setting
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem("theme"); } catch (e) {}
+      if (t !== "light" && t !== "dark") t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      document.documentElement.dataset.theme = t;
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
 </head>
 <body>
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader-inner">
+      <svg class="loader-mark" viewBox="0 0 32 32"><rect width="32" height="32" rx="8"/><path d="M7 21c4-1 6-9 9-9s5 6 9 5"/></svg>
+      <p class="loader-text">Loading 9,527 hours of plant data</p>
+      <div class="loader-bar"><i id="loader-bar"></i></div>
+      <p class="loader-count"><span id="loader-count">0</span>%</p>
+    </div>
+  </div>
+
   <a class="skip" href="#predictor">Skip to the predictor</a>
 
   <header class="nav" id="nav">
@@ -28,16 +48,21 @@
       <span>Plant output predictor</span>
     </a>
     <nav aria-label="Sections">
-      <a href="#physics">The physics</a>
-      <a href="#predictor">Predictor</a>
-      <a href="#how">Method</a>
-      <a href="#results">Results</a>
-      <a class="nav-cta" href="https://github.com/ZainDev04/ccpp-power-prediction">GitHub</a>
+      <a class="nav-link" href="#physics">The physics</a>
+      <a class="nav-link" href="#predictor">Predictor</a>
+      <a class="nav-link" href="#how">Method</a>
+      <a class="nav-link" href="#results">Results</a>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <g class="sun"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></g>
+          <path class="moon" d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/>
+        </svg>
+      </button>
+      <a class="nav-cta magnetic" href="https://github.com/ZainDev04/ccpp-power-prediction">GitHub</a>
     </nav>
   </header>
 
   <main id="top">
-    <!-- hero: inlet air streaming toward the compressor; hotter air is thinner -->
     <section class="hero" aria-labelledby="hero-title">
       <canvas id="air" class="air" aria-hidden="true"></canvas>
       <div class="hero-shade" aria-hidden="true"></div>
@@ -46,11 +71,11 @@
           <h1 id="hero-title" class="split">Predict a power plant's output from the weather.</h1>
           <p class="lede reveal">A combined cycle plant at full load still swings by 76 MW as the air warms and cools. This model learned how from 9,527 real hours, and it runs right here in your browser.</p>
           <div class="cta-row reveal">
-            <a class="btn btn-primary" href="#predictor">Try the predictor</a>
-            <a class="btn btn-ghost" href="https://github.com/ZainDev04/ccpp-power-prediction/blob/main/04_Report/CCPP_Technical_Report.pdf">Read the report</a>
+            <a class="btn btn-primary magnetic" href="#predictor"><span>Try the predictor</span></a>
+            <a class="btn btn-ghost magnetic" href="https://github.com/ZainDev04/ccpp-power-prediction/blob/main/04_Report/CCPP_Technical_Report.pdf"><span>Read the report</span></a>
           </div>
         </div>
-        <aside class="live reveal" aria-label="Simulated day at the plant">
+        <aside class="live glass reveal" aria-label="Simulated day at the plant">
           <p class="live-head"><span class="pulse" aria-hidden="true"></span>A simulated day at the plant</p>
           <div class="live-row">
             <div>
@@ -63,7 +88,7 @@
             </div>
           </div>
           <div class="live-meter" aria-hidden="true"><i id="live-bar"></i></div>
-          <p class="live-note">Each particle is inlet air. Warm air is thinner, so less of it reaches the compressor and the plant makes less power.</p>
+          <p class="live-note">Each streak is inlet air. Warm air is thinner, so less of it reaches the compressor and the plant makes less power.</p>
         </aside>
       </div>
       <dl class="stats">
@@ -74,17 +99,23 @@
       </dl>
     </section>
 
-    <!-- pinned story: scrolling heats the air -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>Six years of hourly data</span><i></i><span>420 to 496 MW at full load</span><i></i><span>41 duplicate rows removed</span><i></i><span>Three models tuned</span><i></i><span>1,906 sealed test hours</span><i></i><span>0.54% mean error</span><i></i>
+        <span>Six years of hourly data</span><i></i><span>420 to 496 MW at full load</span><i></i><span>41 duplicate rows removed</span><i></i><span>Three models tuned</span><i></i><span>1,906 sealed test hours</span><i></i><span>0.54% mean error</span><i></i>
+      </div>
+    </div>
+
     <section id="physics" class="physics" aria-labelledby="physics-title">
       <div class="physics-pin">
         <canvas id="air2" class="air" aria-hidden="true"></canvas>
         <div class="physics-inner">
           <div class="physics-copy">
-            <h2 id="physics-title">Every degree costs about 2.2&nbsp;MW.</h2>
+            <h2 id="physics-title" class="rise">Every degree costs about 2.2&nbsp;MW.</h2>
             <p>The compressor swallows a fixed volume of air each second. Warm air holds less mass in that volume, so less fuel can burn and both turbines produce less. Scroll to heat the air.</p>
             <p class="fine">Output shown is the average of the recorded hours at that temperature.</p>
           </div>
-          <div class="gauge" aria-live="off">
+          <div class="gauge">
             <div class="gauge-block">
               <p class="gauge-label">Air temperature</p>
               <p class="gauge-value"><span id="ph-at">4</span><small>°C</small></p>
@@ -100,9 +131,9 @@
     </section>
 
     <section id="predictor" class="predictor" aria-labelledby="pred-title">
-      <div class="section-head reveal">
-        <h2 id="pred-title">Set the conditions. Watch the plant respond.</h2>
-        <p>Each dot is one recorded hour. The model finds the six hours most like yours across all four readings and averages their output.</p>
+      <div class="section-head">
+        <h2 id="pred-title" class="rise">Set the conditions. Watch the plant respond.</h2>
+        <p class="reveal">Each dot is one recorded hour. The model finds the six hours most like yours across all four readings and averages their output.</p>
       </div>
       <div class="instrument">
         <figure class="plot glass reveal">
@@ -112,7 +143,7 @@
           </div>
         </figure>
 
-        <div class="panel glass reveal">
+        <div class="panel glass glow-edge reveal">
           <div class="readout">
             <p class="readout-label" id="readout-label">Predicted net output</p>
             <p class="readout-value" aria-labelledby="readout-label"><span id="mw">0.0</span><span class="unit">MW</span></p>
@@ -179,9 +210,9 @@
     </section>
 
     <section id="decide" class="decide" aria-labelledby="decide-title">
-      <div class="section-head reveal">
-        <h2 id="decide-title">Turn the prediction into decisions.</h2>
-        <p>Both tools use the conditions you set above.</p>
+      <div class="section-head">
+        <h2 id="decide-title" class="rise">Turn the prediction into decisions.</h2>
+        <p class="reveal">Both tools use the conditions you set above.</p>
       </div>
       <div class="tools">
         <div class="tool glass reveal">
@@ -214,9 +245,9 @@
     </section>
 
     <section id="how" class="how" aria-labelledby="how-title">
-      <div class="section-head reveal">
-        <h2 id="how-title">From raw spreadsheet to a model you can trust.</h2>
-        <p>Six years of hourly data from a real plant, UCI Machine Learning Repository.</p>
+      <div class="section-head">
+        <h2 id="how-title" class="rise">From raw spreadsheet to a model you can trust.</h2>
+        <p class="reveal">Six years of hourly data from a real plant, UCI Machine Learning Repository.</p>
       </div>
       <ol class="timeline" id="timeline">
         <li class="reveal">
@@ -243,9 +274,9 @@
     </section>
 
     <section id="results" class="results" aria-labelledby="results-title">
-      <div class="section-head reveal">
-        <h2 id="results-title">Results on 1,906 hours no model had seen.</h2>
-        <p>All three models beat the best published result on this dataset (R² 0.912). The published study used a different split, so the comparison is indicative.</p>
+      <div class="section-head">
+        <h2 id="results-title" class="rise">Results on 1,906 hours no model had seen.</h2>
+        <p class="reveal">All three models beat the best published result on this dataset (R² 0.912). The published study used a different split, so the comparison is indicative.</p>
       </div>
       <div class="charts">
         <figure class="chart glass reveal">
@@ -263,19 +294,22 @@
     </section>
 
     <section class="more" aria-labelledby="more-title">
-      <h2 id="more-title" class="reveal">Read the full work.</h2>
+      <h2 id="more-title" class="rise">Read the full work.</h2>
       <ul class="links">
-        <li class="reveal"><a href="https://github.com/ZainDev04/ccpp-power-prediction/blob/main/04_Report/CCPP_Technical_Report.pdf"><strong>Technical report</strong><span>35 pages, PDF</span></a></li>
-        <li class="reveal"><a href="https://github.com/ZainDev04/ccpp-power-prediction/blob/main/02_Notebook/CCPP_Power_Prediction.ipynb"><strong>Python notebook</strong><span>Every number and chart</span></a></li>
-        <li class="reveal"><a href="https://public.tableau.com/app/profile/shaikh.muhammad.zain/viz/CCPPfull-loadpowerpredictionoperationsmodelsanddecisions/Plantoperations"><strong>Tableau dashboard</strong><span>Three interactive pages</span></a></li>
-        <li class="reveal"><a href="https://github.com/ZainDev04/ccpp-power-prediction"><strong>Source code</strong><span>GitHub</span></a></li>
+        <li class="reveal"><a class="glass" href="https://github.com/ZainDev04/ccpp-power-prediction/blob/main/04_Report/CCPP_Technical_Report.pdf"><strong>Technical report</strong><span>35 pages, PDF</span></a></li>
+        <li class="reveal"><a class="glass" href="https://github.com/ZainDev04/ccpp-power-prediction/blob/main/02_Notebook/CCPP_Power_Prediction.ipynb"><strong>Python notebook</strong><span>Every number and chart</span></a></li>
+        <li class="reveal"><a class="glass" href="https://public.tableau.com/app/profile/shaikh.muhammad.zain/viz/CCPPfull-loadpowerpredictionoperationsmodelsanddecisions/Plantoperations"><strong>Tableau dashboard</strong><span>Three interactive pages</span></a></li>
+        <li class="reveal"><a class="glass" href="https://github.com/ZainDev04/ccpp-power-prediction"><strong>Source code</strong><span>GitHub</span></a></li>
       </ul>
     </section>
   </main>
 
   <footer class="foot">
-    <p>Built by Shaikh Muhammad Zain.</p>
-    <p>Data: Tüfekci and Kaya, Combined Cycle Power Plant, <a href="https://archive.ics.uci.edu/dataset/294/combined+cycle+power+plant">UCI Machine Learning Repository</a>, CC BY 4.0.</p>
+    <p class="foot-mark" aria-hidden="true">Plant output predictor</p>
+    <div class="foot-row">
+      <p>Built by Shaikh Muhammad Zain.</p>
+      <p>Data: Tüfekci and Kaya, Combined Cycle Power Plant, <a href="https://archive.ics.uci.edu/dataset/294/combined+cycle+power+plant">UCI Machine Learning Repository</a>, CC BY 4.0.</p>
+    </div>
   </footer>
 
   <script type="module" src="app.js"></script>
