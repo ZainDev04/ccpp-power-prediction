@@ -17,7 +17,8 @@ const FIELDS = [
   { id: "RH", unit: "%" },
 ];
 const NAMES = { AT: "temperature", V: "vacuum", AP: "pressure", RH: "humidity" };
-const COLUMN_LABELS = ["Hour", "Temperature (°C)", "Vacuum (cm Hg)", "Pressure (mbar)", "Humidity (%)", "Output (MW)", "Weight"];
+// short labels for the phone card layout, where each value carries its own label
+const COLUMN_LABELS = ["Hour", "Temp. °C", "Vacuum cm Hg", "Pressure mbar", "Humidity %", "Output MW", "Weight"];
 
 // ---------- theme
 const root = document.documentElement;
