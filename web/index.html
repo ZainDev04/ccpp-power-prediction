@@ -4,201 +4,271 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Plant output predictor</title>
-  <meta name="description" content="Predict the net electrical output of a combined cycle power plant from the weather and the condenser reading. A KNN model trained on 7,621 real plant hours.">
-  <meta name="theme-color" content="#EEF1F3">
+  <meta name="description" content="Predict the net electrical output of a combined cycle power plant from the weather and the condenser reading. A KNN model trained on 7,621 real plant hours, running in your browser.">
+  <meta name="theme-color" content="#0A1118">
   <meta property="og:title" content="Plant output predictor">
   <meta property="og:description" content="Set the weather, see what a combined cycle power plant will produce, and the six past hours the prediction is based on.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://ccpp-power-prediction.vercel.app/preview.png">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2314212B'/%3E%3Cpath d='M7 22c4-1 6-9 9-9s5 6 9 5' fill='none' stroke='%23CF8A12' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230A1118'/%3E%3Cpath d='M7 21c4-1 6-9 9-9s5 6 9 5' fill='none' stroke='%23F2A33A' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
 </head>
 <body>
-  <a class="skip" href="#instrument">Skip to the predictor</a>
+  <a class="skip" href="#predictor">Skip to the predictor</a>
 
-  <header class="bar">
+  <header class="nav" id="nav">
     <a class="wordmark" href="#top" aria-label="Plant output predictor, back to top">
-      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7"/><path d="M7 22c4-1 6-9 9-9s5 6 9 5"/></svg>
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8"/><path d="M7 21c4-1 6-9 9-9s5 6 9 5"/></svg>
       <span>Plant output predictor</span>
     </a>
     <nav aria-label="Sections">
-      <a href="#check">Use it</a>
-      <a href="#how">How it was built</a>
+      <a href="#physics">The physics</a>
+      <a href="#predictor">Predictor</a>
+      <a href="#how">Method</a>
       <a href="#results">Results</a>
-      <a href="https://github.com/ZainDev04/ccpp-power-prediction">GitHub</a>
+      <a class="nav-cta" href="https://github.com/ZainDev04/ccpp-power-prediction">GitHub</a>
     </nav>
   </header>
 
   <main id="top">
+    <!-- hero: inlet air streaming toward the compressor; hotter air is thinner -->
     <section class="hero" aria-labelledby="hero-title">
-      <h1 id="hero-title">How much power will the plant make this&nbsp;hour?</h1>
-      <p class="lede">Set the weather and the condenser reading. A model trained on 7,621 real hours of a combined cycle power plant at full load predicts its net output, and shows the six past hours the prediction rests on.</p>
+      <canvas id="air" class="air" aria-hidden="true"></canvas>
+      <div class="hero-shade" aria-hidden="true"></div>
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <h1 id="hero-title" class="split">Predict a power plant's output from the weather.</h1>
+          <p class="lede reveal">A combined cycle plant at full load still swings by 76 MW as the air warms and cools. This model learned how from 9,527 real hours, and it runs right here in your browser.</p>
+          <div class="cta-row reveal">
+            <a class="btn btn-primary" href="#predictor">Try the predictor</a>
+            <a class="btn btn-ghost" href="https://github.com/ZainDev04/ccpp-power-prediction/blob/main/04_Report/CCPP_Technical_Report.pdf">Read the report</a>
+          </div>
+        </div>
+        <aside class="live reveal" aria-label="Simulated day at the plant">
+          <p class="live-head"><span class="pulse" aria-hidden="true"></span>A simulated day at the plant</p>
+          <div class="live-row">
+            <div>
+              <p class="live-label">Inlet air</p>
+              <p class="live-value"><span id="live-at">18.0</span><small>°C</small></p>
+            </div>
+            <div>
+              <p class="live-label">Predicted output</p>
+              <p class="live-value"><span id="live-mw">458.0</span><small>MW</small></p>
+            </div>
+          </div>
+          <div class="live-meter" aria-hidden="true"><i id="live-bar"></i></div>
+          <p class="live-note">Each particle is inlet air. Warm air is thinner, so less of it reaches the compressor and the plant makes less power.</p>
+        </aside>
+      </div>
+      <dl class="stats">
+        <div class="stat reveal"><dt>Typical error</dt><dd><span class="count" data-to="3.45" data-dec="2">3.45</span> MW</dd></div>
+        <div class="stat reveal"><dt>Variance explained (R²)</dt><dd><span class="count" data-to="0.959" data-dec="3">0.959</span></dd></div>
+        <div class="stat reveal"><dt>Hours of plant data</dt><dd><span class="count" data-to="9527" data-dec="0">9,527</span></dd></div>
+        <div class="stat reveal"><dt>Published benchmark R²</dt><dd><span class="count" data-to="0.912" data-dec="3">0.912</span></dd></div>
+      </dl>
     </section>
 
-    <section id="instrument" class="instrument" aria-label="Predictor">
-      <figure class="plot">
-        <div class="plot-frame" id="plot">
-          <canvas id="cloud" aria-hidden="true"></canvas>
-          <svg id="overlay" role="img" aria-labelledby="plot-desc"><desc id="plot-desc">Net output against ambient temperature for all 9,527 recorded hours, with the current prediction and its six nearest past hours marked.</desc></svg>
+    <!-- pinned story: scrolling heats the air -->
+    <section id="physics" class="physics" aria-labelledby="physics-title">
+      <div class="physics-pin">
+        <canvas id="air2" class="air" aria-hidden="true"></canvas>
+        <div class="physics-inner">
+          <div class="physics-copy">
+            <h2 id="physics-title">Every degree costs about 2.2&nbsp;MW.</h2>
+            <p>The compressor swallows a fixed volume of air each second. Warm air holds less mass in that volume, so less fuel can burn and both turbines produce less. Scroll to heat the air.</p>
+            <p class="fine">Output shown is the average of the recorded hours at that temperature.</p>
+          </div>
+          <div class="gauge" aria-live="off">
+            <div class="gauge-block">
+              <p class="gauge-label">Air temperature</p>
+              <p class="gauge-value"><span id="ph-at">4</span><small>°C</small></p>
+            </div>
+            <div class="gauge-block">
+              <p class="gauge-label">Average net output</p>
+              <p class="gauge-value"><span id="ph-mw">485</span><small>MW</small></p>
+            </div>
+            <div class="thermo" aria-hidden="true"><i id="ph-fill"></i></div>
+          </div>
         </div>
-        <figcaption>Each dot is one recorded hour. The ringed dots are the six past hours closest to your inputs across all four measurements, so some can sit at a different temperature.</figcaption>
-      </figure>
-
-      <div class="panel">
-        <div class="readout" id="readout">
-          <p class="readout-label" id="readout-label">Predicted net output</p>
-          <p class="readout-value" aria-labelledby="readout-label" aria-live="polite"><span id="mw">0.0</span><span class="unit">MW</span></p>
-          <p class="readout-band" id="band">&nbsp;</p>
-          <p class="status" id="status" data-level="valid" aria-live="polite">&nbsp;</p>
-        </div>
-
-        <form class="controls" id="controls" aria-label="Plant conditions">
-          <div class="control">
-            <label for="AT">Air temperature</label>
-            <output for="AT" id="AT-out"></output>
-            <input type="range" id="AT" min="0" max="45" step="0.1" value="20">
-          </div>
-          <div class="control">
-            <label for="V">Exhaust vacuum</label>
-            <output for="V" id="V-out"></output>
-            <input type="range" id="V" min="25" max="82" step="0.1" value="52">
-          </div>
-          <div class="control">
-            <label for="AP">Air pressure</label>
-            <output for="AP" id="AP-out"></output>
-            <input type="range" id="AP" min="990" max="1036" step="0.1" value="1013">
-          </div>
-          <div class="control">
-            <label for="RH">Relative humidity</label>
-            <output for="RH" id="RH-out"></output>
-            <input type="range" id="RH" min="20" max="100" step="0.1" value="70">
-          </div>
-        </form>
-
-        <div class="presets" role="group" aria-label="Try a test case">
-          <p>Try a test case</p>
-          <button type="button" data-case="33,71,1008,45">Hot afternoon</button>
-          <button type="button" data-case="6,40,1020,85">Cold night</button>
-          <button type="button" data-case="20,52,1013,90">Humid mild day</button>
-          <button type="button" data-case="20,52,1013,45">Dry mild day</button>
-          <button type="button" data-case="41,74,1006,30">Heatwave</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="neighbours" aria-labelledby="nb-title">
-      <div class="section-head">
-        <h2 id="nb-title">The six hours behind this prediction</h2>
-        <p>The model finds the six recorded hours most like yours and averages their output. Closer hours count for more.</p>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th scope="col">Hour</th>
-              <th scope="col" class="num">Temperature (°C)</th>
-              <th scope="col" class="num">Vacuum (cm Hg)</th>
-              <th scope="col" class="num">Pressure (mbar)</th>
-              <th scope="col" class="num">Humidity (%)</th>
-              <th scope="col" class="num">Output (MW)</th>
-              <th scope="col">Weight</th>
-            </tr>
-          </thead>
-          <tbody id="nb-rows"></tbody>
-        </table>
       </div>
     </section>
 
-    <section id="check" class="check" aria-labelledby="check-title">
-      <h2 id="check-title" class="visually-hidden">Use the prediction</h2>
-      <div class="tool">
-        <h3>Is the plant underperforming?</h3>
-        <p>Enter the output the plant is actually producing in these conditions.</p>
-        <label class="field" for="measured">
-          <span>Measured output</span>
-          <span class="input-unit"><input type="number" id="measured" inputmode="decimal" min="300" max="600" step="0.1" placeholder="e.g. 445.0"><span>MW</span></span>
-        </label>
-        <p class="verdict" id="alarm" aria-live="polite">Enter a measured output to compare it with the prediction.</p>
-        <p class="fine" id="alarm-rule"></p>
+    <section id="predictor" class="predictor" aria-labelledby="pred-title">
+      <div class="section-head reveal">
+        <h2 id="pred-title">Set the conditions. Watch the plant respond.</h2>
+        <p>Each dot is one recorded hour. The model finds the six hours most like yours across all four readings and averages their output.</p>
+      </div>
+      <div class="instrument">
+        <figure class="plot glass reveal">
+          <div class="plot-frame" id="plot">
+            <canvas id="cloud" aria-hidden="true"></canvas>
+            <svg id="overlay" role="img" aria-labelledby="plot-desc"><desc id="plot-desc">Net output against air temperature for all 9,527 recorded hours, with the current prediction and its six nearest past hours marked.</desc></svg>
+          </div>
+        </figure>
+
+        <div class="panel glass reveal">
+          <div class="readout">
+            <p class="readout-label" id="readout-label">Predicted net output</p>
+            <p class="readout-value" aria-labelledby="readout-label"><span id="mw">0.0</span><span class="unit">MW</span></p>
+            <p class="readout-band" id="band" aria-live="polite">&nbsp;</p>
+            <p class="status" id="status" data-level="valid" aria-live="polite">&nbsp;</p>
+          </div>
+
+          <form class="controls" id="controls" aria-label="Plant conditions">
+            <div class="control">
+              <label for="AT">Air temperature</label>
+              <output for="AT" id="AT-out"></output>
+              <input type="range" id="AT" min="0" max="45" step="0.1" value="20">
+            </div>
+            <div class="control">
+              <label for="V">Exhaust vacuum</label>
+              <output for="V" id="V-out"></output>
+              <input type="range" id="V" min="25" max="82" step="0.1" value="52">
+            </div>
+            <div class="control">
+              <label for="AP">Air pressure</label>
+              <output for="AP" id="AP-out"></output>
+              <input type="range" id="AP" min="990" max="1036" step="0.1" value="1013">
+            </div>
+            <div class="control">
+              <label for="RH">Relative humidity</label>
+              <output for="RH" id="RH-out"></output>
+              <input type="range" id="RH" min="20" max="100" step="0.1" value="70">
+            </div>
+          </form>
+
+          <div class="presets" role="group" aria-labelledby="presets-label">
+            <p id="presets-label">Try a test case</p>
+            <button type="button" data-case="33,71,1008,45">Hot afternoon</button>
+            <button type="button" data-case="6,40,1020,85">Cold night</button>
+            <button type="button" data-case="20,52,1013,90">Humid day</button>
+            <button type="button" data-case="20,52,1013,45">Dry day</button>
+            <button type="button" data-case="41,74,1006,30">Heatwave</button>
+          </div>
+        </div>
       </div>
 
-      <div class="tool">
-        <h3>How much should the plant promise the grid?</h3>
-        <p>Promising the bare prediction falls short about half the time. A small margin trades that risk for some unsold energy.</p>
-        <div class="control">
-          <label for="ratio">A shortfall costs</label>
-          <output for="ratio" id="ratio-out"></output>
-          <input type="range" id="ratio" min="1" max="10" step="0.5" value="4">
+      <div class="neighbours glass reveal">
+        <div class="nb-head">
+          <h3>The six hours behind this prediction</h3>
+          <p>Closer hours carry more weight. An engineer can check every one of them.</p>
         </div>
-        <dl class="commit">
-          <div><dt>Promise</dt><dd id="commit-mw">0.0 MW</dd></div>
-          <div><dt>Safety margin</dt><dd id="commit-margin">0.0 MW</dd></div>
-          <div><dt>Hours short</dt><dd id="commit-short">0%</dd></div>
-        </dl>
-        <p class="fine">The margin is the error level the model stays under on the right share of test hours, so the expected cost of shortfall and unsold energy is lowest (the newsvendor rule).</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Hour</th>
+                <th scope="col" class="num">Temperature (°C)</th>
+                <th scope="col" class="num">Vacuum (cm Hg)</th>
+                <th scope="col" class="num">Pressure (mbar)</th>
+                <th scope="col" class="num">Humidity (%)</th>
+                <th scope="col" class="num">Output (MW)</th>
+                <th scope="col">Weight</th>
+              </tr>
+            </thead>
+            <tbody id="nb-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="decide" class="decide" aria-labelledby="decide-title">
+      <div class="section-head reveal">
+        <h2 id="decide-title">Turn the prediction into decisions.</h2>
+        <p>Both tools use the conditions you set above.</p>
+      </div>
+      <div class="tools">
+        <div class="tool glass reveal">
+          <h3>Is the plant underperforming?</h3>
+          <p>Enter what the plant is actually producing right now.</p>
+          <label class="field" for="measured">
+            <span>Measured output</span>
+            <span class="input-unit"><input type="number" id="measured" inputmode="decimal" min="300" max="600" step="0.1" placeholder="e.g. 445.0"><span>MW</span></span>
+          </label>
+          <p class="verdict" id="alarm" aria-live="polite">Enter a measured output to compare it with the prediction.</p>
+          <p class="fine" id="alarm-rule"></p>
+        </div>
+
+        <div class="tool glass reveal">
+          <h3>How much should the plant promise the grid?</h3>
+          <p>Promising the bare prediction falls short half the time. A margin trades that risk for some unsold energy.</p>
+          <div class="control">
+            <label for="ratio">A shortfall costs</label>
+            <output for="ratio" id="ratio-out"></output>
+            <input type="range" id="ratio" min="1" max="10" step="0.5" value="4">
+          </div>
+          <dl class="commit">
+            <div><dt>Promise</dt><dd id="commit-mw">0.0 MW</dd></div>
+            <div><dt>Safety margin</dt><dd id="commit-margin">0.0 MW</dd></div>
+            <div><dt>Hours short</dt><dd id="commit-short">0%</dd></div>
+          </dl>
+          <p class="fine">The margin sits where the expected cost of shortfall plus unsold energy is lowest, using the model's real test errors (the newsvendor rule).</p>
+        </div>
       </div>
     </section>
 
     <section id="how" class="how" aria-labelledby="how-title">
-      <div class="section-head">
-        <h2 id="how-title">How it was built</h2>
-        <p>Public data from a real plant: hourly averages recorded over six years while it ran at full load. The operators never changed the set point, yet output moved between 420 and 496 MW with the weather.</p>
+      <div class="section-head reveal">
+        <h2 id="how-title">From raw spreadsheet to a model you can trust.</h2>
+        <p>Six years of hourly data from a real plant, UCI Machine Learning Repository.</p>
       </div>
-      <ol class="steps">
-        <li>
+      <ol class="timeline" id="timeline">
+        <li class="reveal">
           <h3>Audit the raw data</h3>
-          <p>9,568 hours. The file held 41 duplicate rows, 55 humidity readings above 100%, and 182 hours where the vacuum reads higher than the air pressure, so its unit label cannot be right.</p>
+          <p>9,568 hours. Found 41 duplicate rows, 55 humidity readings above 100%, and 182 hours where the vacuum reads above air pressure, so its unit label cannot be right.</p>
         </li>
-        <li>
-          <h3>Clean it with fixed rules</h3>
-          <p>Duplicates dropped and humidity capped at 100%. Unusual weather was kept, because it is real and it is where predictions matter. 9,527 hours remain.</p>
+        <li class="reveal">
+          <h3>Clean with fixed rules</h3>
+          <p>Duplicates dropped, humidity capped at 100%. Unusual weather kept, because it is real and it is where predictions matter. 9,527 hours remain.</p>
         </li>
-        <li>
+        <li class="reveal">
           <h3>Lock away a test set</h3>
-          <p>7,621 hours for training and 1,906 for the final test, split so both hold the same mix of low and high output. Scaling is fitted on training hours only.</p>
+          <p>7,621 hours to train, 1,906 sealed for one final test, with the same mix of low and high output in both.</p>
         </li>
-        <li>
+        <li class="reveal">
           <h3>Tune three models</h3>
-          <p>Support vector regression, k-nearest neighbours and a neural network, each tuned with 5-fold cross-validation on the training hours.</p>
+          <p>Support vector regression, k-nearest neighbours and a neural network, each tuned by 5-fold cross-validation on training hours only.</p>
         </li>
-        <li>
+        <li class="reveal">
           <h3>Test once and choose</h3>
-          <p>KNN was the most accurate and made the fewest costly over-predictions: more than 5 MW too high on 5.3% of hours, against 6.9% and 7.8% for the others.</p>
+          <p>KNN was the most accurate and made the fewest costly over-predictions, then got two safety checks for unusual conditions.</p>
         </li>
       </ol>
     </section>
 
     <section id="results" class="results" aria-labelledby="results-title">
-      <div class="section-head">
-        <h2 id="results-title">Results on 1,906 unseen hours</h2>
-        <p>All three models beat the best published result on this dataset (R² 0.912). The comparison is indicative, because the published study used a different split.</p>
+      <div class="section-head reveal">
+        <h2 id="results-title">Results on 1,906 hours no model had seen.</h2>
+        <p>All three models beat the best published result on this dataset (R² 0.912). The published study used a different split, so the comparison is indicative.</p>
       </div>
       <div class="charts">
-        <figure class="chart">
-          <figcaption><strong>Typical error</strong> Root mean squared error, in MW. Lower is better.</figcaption>
+        <figure class="chart glass reveal">
+          <figcaption><strong>Typical error</strong> Root mean squared error in MW. Lower is better.</figcaption>
           <div id="rmse-chart"></div>
-          <p class="chart-sub"><strong>Costly mistakes</strong> Share of test hours predicted more than 5 MW too high. Promising power the plant cannot deliver is the expensive error.</p>
+          <p class="chart-sub"><strong>Costly mistakes</strong> Share of hours predicted more than 5 MW too high: power promised that the plant cannot deliver.</p>
           <div id="over-chart"></div>
         </figure>
-        <figure class="chart">
-          <figcaption><strong>Hotter than any recorded hour</strong> Predicted output past 37.1 °C, with vacuum, pressure and humidity held at hot-day values.</figcaption>
+        <figure class="chart glass reveal">
+          <figcaption><strong>Hotter than any recorded hour</strong> Predicted output past 37.1 °C, with the other readings at hot-day values.</figcaption>
           <div id="heat-chart"></div>
-          <p class="fine">Physics says output keeps falling as the air gets hotter. The SVR predicts it rising again, to 455 MW at 45 °C. No model is trusted outside its data, so this predictor flags those inputs.</p>
+          <p class="fine">Physics says output keeps falling as the air heats up. The SVR predicts it rising again, to 455 MW at 45 °C. No model is trusted outside its data, so this predictor flags those conditions.</p>
         </figure>
       </div>
     </section>
 
     <section class="more" aria-labelledby="more-title">
-      <h2 id="more-title">Read the full work</h2>
+      <h2 id="more-title" class="reveal">Read the full work.</h2>
       <ul class="links">
-        <li><a href="https://github.com/ZainDev04/ccpp-power-prediction/blob/main/04_Report/CCPP_Technical_Report.pdf">Technical report <span>35 pages, PDF</span></a></li>
-        <li><a href="https://github.com/ZainDev04/ccpp-power-prediction/blob/main/02_Notebook/CCPP_Power_Prediction.ipynb">Python notebook <span>every number and chart</span></a></li>
-        <li><a href="https://public.tableau.com/app/profile/shaikh.muhammad.zain/viz/CCPPfull-loadpowerpredictionoperationsmodelsanddecisions/Plantoperations">Tableau dashboard <span>three interactive pages</span></a></li>
-        <li><a href="https://github.com/ZainDev04/ccpp-power-prediction">Source code <span>GitHub</span></a></li>
+        <li class="reveal"><a href="https://github.com/ZainDev04/ccpp-power-prediction/blob/main/04_Report/CCPP_Technical_Report.pdf"><strong>Technical report</strong><span>35 pages, PDF</span></a></li>
+        <li class="reveal"><a href="https://github.com/ZainDev04/ccpp-power-prediction/blob/main/02_Notebook/CCPP_Power_Prediction.ipynb"><strong>Python notebook</strong><span>Every number and chart</span></a></li>
+        <li class="reveal"><a href="https://public.tableau.com/app/profile/shaikh.muhammad.zain/viz/CCPPfull-loadpowerpredictionoperationsmodelsanddecisions/Plantoperations"><strong>Tableau dashboard</strong><span>Three interactive pages</span></a></li>
+        <li class="reveal"><a href="https://github.com/ZainDev04/ccpp-power-prediction"><strong>Source code</strong><span>GitHub</span></a></li>
       </ul>
     </section>
   </main>
