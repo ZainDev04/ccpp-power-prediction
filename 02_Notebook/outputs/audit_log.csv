@@ -1,0 +1,12 @@
+check,finding,planned action
+Data types,"all 5 columns are float64, 0 non-numeric columns",none
+Categorical variables,none; all inputs are continuous measurements,no encoding needed
+Missing values,"0 missing cells in 47,840",no imputation needed
+Five Excel sheets,identical sets of rows in different orders,use Sheet1 only; stacking sheets would copy every row five times
+Duplicates,"41 exact duplicate rows (0.43%), no conflicting targets",drop the second copy of each
+Physical limit: RH,55 rows with RH between 100.06 and 100.16%,cap at 100% (keep the rows)
+Units: V,"182 rows with V above ambient pressure, impossible for a vacuum in cm Hg",keep V; standardization removes any linear unit error; interpret only as a relative back-pressure index
+Outliers,"AT, V, PE: none. AP: 88 (IQR), RH: 12 (IQR); all physically plausible weather",keep all; no deletion or clipping
+Target coverage,two clusters (about 430-450 and 460-480 MW); 4.4% of hours in the lowest and highest 10 MW bands,stratify the train/test split on PE bands (section 6); report error by PE band (section 10)
+Multicollinearity,AT-V r = 0.84; max VIF 6.0 (AT),keep all four inputs; interpret AT and V effects jointly (section 12)
+Leakage,"no target-derived, ID or time columns; duplicates and sheet stacking are the only data-level risks",remove duplicates; scaler inside pipeline; tune by CV on training data; test set used once

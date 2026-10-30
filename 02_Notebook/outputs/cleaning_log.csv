@@ -1,0 +1,6 @@
+step,rule,rows affected,rows after
+load raw data,Sheet1 of Folds5x2_pp.xlsx,0,9568
+remove duplicates,"drop exact repeats of all five columns, keep first",41,9527
+cap RH,RH > 100 % set to 100 %,55,9527
+outliers,"kept (real weather, section 3.7)",0,9527
+V unit issue,kept unchanged (section 3.6),0,9527

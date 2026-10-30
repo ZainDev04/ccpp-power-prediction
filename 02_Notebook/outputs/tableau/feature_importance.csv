@@ -1,0 +1,9 @@
+Model,Input,RMSE increase when shuffled (MW),Std (MW)
+KNN,Ambient temperature (C),11.301,0.123
+KNN,Exhaust vacuum (cm Hg),6.218,0.174
+KNN,Ambient pressure (mbar),1.721,0.074
+KNN,Relative humidity (%),1.274,0.086
+MLP,Ambient temperature (C),18.253,0.307
+MLP,Exhaust vacuum (cm Hg),3.446,0.107
+MLP,Ambient pressure (mbar),1.136,0.046
+MLP,Relative humidity (%),1.146,0.032

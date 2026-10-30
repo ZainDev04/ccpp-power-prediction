@@ -1,0 +1,31 @@
+Model,Metric,Evaluation,Value
+SVR,RMSE (MW),cross-validation,3.8318
+SVR,MAE (MW),cross-validation,2.8004
+SVR,MAPE (%),cross-validation,0.6176
+SVR,R2,cross-validation,0.9491
+SVR,RMSE (MW),test,3.6128
+SVR,MAE (MW),test,2.6434
+SVR,MAPE (%),test,0.5837
+SVR,R2,test,0.9551
+SVR,Fit time (s),cross-validation,3.3649
+KNN,RMSE (MW),cross-validation,3.6391
+KNN,MAE (MW),cross-validation,2.6196
+KNN,MAPE (%),cross-validation,0.5779
+KNN,R2,cross-validation,0.9541
+KNN,RMSE (MW),test,3.4495
+KNN,MAE (MW),test,2.4437
+KNN,MAPE (%),test,0.5395
+KNN,R2,test,0.9591
+KNN,Fit time (s),cross-validation,0.0163
+MLP,RMSE (MW),cross-validation,3.7958
+MLP,MAE (MW),cross-validation,2.8046
+MLP,MAPE (%),cross-validation,0.6184
+MLP,R2,cross-validation,0.95
+MLP,RMSE (MW),test,3.6593
+MLP,MAE (MW),test,2.7371
+MLP,MAPE (%),test,0.6043
+MLP,R2,test,0.954
+MLP,Fit time (s),cross-validation,25.8307
+Reference study (gradient boosting),R2,test,0.912
+Reference study (gradient boosting),MAPE (%),test,0.872
+Mean baseline,RMSE (MW),test,17.055

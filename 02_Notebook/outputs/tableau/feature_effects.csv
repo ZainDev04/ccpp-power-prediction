@@ -1,0 +1,169 @@
+Model,Input,Input value,Effect on output (MW)
+KNN,Ambient temperature (C),1.81,13.7277
+KNN,Ambient temperature (C),7.53,11.0348
+KNN,Ambient temperature (C),9.42,8.7194
+KNN,Ambient temperature (C),10.68,7.7218
+KNN,Ambient temperature (C),12.24,5.1185
+KNN,Ambient temperature (C),13.51,3.7207
+KNN,Ambient temperature (C),14.54,2.6333
+KNN,Ambient temperature (C),15.79,1.7006
+KNN,Ambient temperature (C),17.44,0.7595
+KNN,Ambient temperature (C),18.92,-0.1644
+KNN,Ambient temperature (C),20.4,-1.1363
+KNN,Ambient temperature (C),21.71,-2.2942
+KNN,Ambient temperature (C),22.86,-3.2707
+KNN,Ambient temperature (C),23.82,-3.894
+KNN,Ambient temperature (C),24.8,-4.3835
+KNN,Ambient temperature (C),25.74,-4.8349
+KNN,Ambient temperature (C),26.82,-5.5482
+KNN,Ambient temperature (C),28.01,-5.9044
+KNN,Ambient temperature (C),29.27,-6.2807
+KNN,Ambient temperature (C),30.96,-6.9764
+KNN,Ambient temperature (C),37.11,-7.3827
+KNN,Exhaust vacuum (cm Hg),25.36,2.2703
+KNN,Exhaust vacuum (cm Hg),38.73,2.8293
+KNN,Exhaust vacuum (cm Hg),39.72,2.7592
+KNN,Exhaust vacuum (cm Hg),40.64,2.7809
+KNN,Exhaust vacuum (cm Hg),41.16,2.5421
+KNN,Exhaust vacuum (cm Hg),41.7,2.1752
+KNN,Exhaust vacuum (cm Hg),43.02,2.4242
+KNN,Exhaust vacuum (cm Hg),44.2,2.1347
+KNN,Exhaust vacuum (cm Hg),45.09,1.905
+KNN,Exhaust vacuum (cm Hg),49.15,0.7579
+KNN,Exhaust vacuum (cm Hg),52.08,1.1304
+KNN,Exhaust vacuum (cm Hg),57.76,-1.1069
+KNN,Exhaust vacuum (cm Hg),59.39,-1.5084
+KNN,Exhaust vacuum (cm Hg),61.86,-1.4895
+KNN,Exhaust vacuum (cm Hg),64.27,-1.6275
+KNN,Exhaust vacuum (cm Hg),66.51,-2.4755
+KNN,Exhaust vacuum (cm Hg),68.3,-3.0358
+KNN,Exhaust vacuum (cm Hg),69.89,-3.2637
+KNN,Exhaust vacuum (cm Hg),71.43,-3.5339
+KNN,Exhaust vacuum (cm Hg),73.67,-3.2743
+KNN,Exhaust vacuum (cm Hg),81.56,-2.8634
+KNN,Ambient pressure (mbar),992.89,-1.6927
+KNN,Ambient pressure (mbar),1003.97,-1.3481
+KNN,Ambient pressure (mbar),1006.0,-0.6604
+KNN,Ambient pressure (mbar),1007.25,-0.4543
+KNN,Ambient pressure (mbar),1008.15,-0.3542
+KNN,Ambient pressure (mbar),1009.07,-0.2131
+KNN,Ambient pressure (mbar),1009.86,0.0008
+KNN,Ambient pressure (mbar),1010.71,0.0276
+KNN,Ambient pressure (mbar),1011.37,0.1954
+KNN,Ambient pressure (mbar),1012.19,0.0977
+KNN,Ambient pressure (mbar),1012.92,0.1712
+KNN,Ambient pressure (mbar),1013.56,0.1669
+KNN,Ambient pressure (mbar),1014.31,0.1724
+KNN,Ambient pressure (mbar),1015.21,0.421
+KNN,Ambient pressure (mbar),1016.21,0.3993
+KNN,Ambient pressure (mbar),1017.22,0.1149
+KNN,Ambient pressure (mbar),1018.13,-0.3154
+KNN,Ambient pressure (mbar),1019.56,0.2784
+KNN,Ambient pressure (mbar),1020.84,0.7323
+KNN,Ambient pressure (mbar),1023.48,0.7137
+KNN,Ambient pressure (mbar),1033.3,1.4169
+KNN,Relative humidity (%),25.89,-1.5199
+KNN,Relative humidity (%),46.52,0.0526
+KNN,Relative humidity (%),52.69,0.0387
+KNN,Relative humidity (%),56.7,0.0485
+KNN,Relative humidity (%),60.36,0.3144
+KNN,Relative humidity (%),63.33,0.2084
+KNN,Relative humidity (%),65.95,0.0782
+KNN,Relative humidity (%),68.37,0.1341
+KNN,Relative humidity (%),70.61,0.3106
+KNN,Relative humidity (%),72.85,0.22
+KNN,Relative humidity (%),74.89,0.1232
+KNN,Relative humidity (%),76.92,0.0539
+KNN,Relative humidity (%),78.92,0.063
+KNN,Relative humidity (%),81.1,-0.0503
+KNN,Relative humidity (%),82.93,-0.1309
+KNN,Relative humidity (%),84.83,0.0772
+KNN,Relative humidity (%),86.66,-0.0221
+KNN,Relative humidity (%),88.68,0.0254
+KNN,Relative humidity (%),91.02,-0.0879
+KNN,Relative humidity (%),94.72,-0.5591
+KNN,Relative humidity (%),100.0,-0.2584
+MLP,Ambient temperature (C),1.81,33.444
+MLP,Ambient temperature (C),7.53,24.7031
+MLP,Ambient temperature (C),9.42,20.544
+MLP,Ambient temperature (C),10.68,17.4118
+MLP,Ambient temperature (C),12.24,13.1363
+MLP,Ambient temperature (C),13.51,9.7906
+MLP,Ambient temperature (C),14.54,7.1481
+MLP,Ambient temperature (C),15.79,4.5376
+MLP,Ambient temperature (C),17.44,1.7737
+MLP,Ambient temperature (C),18.92,-0.5271
+MLP,Ambient temperature (C),20.4,-2.9073
+MLP,Ambient temperature (C),21.71,-5.3022
+MLP,Ambient temperature (C),22.86,-7.4352
+MLP,Ambient temperature (C),23.82,-9.1405
+MLP,Ambient temperature (C),24.8,-10.5515
+MLP,Ambient temperature (C),25.74,-11.7497
+MLP,Ambient temperature (C),26.82,-12.8622
+MLP,Ambient temperature (C),28.01,-13.9267
+MLP,Ambient temperature (C),29.27,-15.0426
+MLP,Ambient temperature (C),30.96,-16.3196
+MLP,Ambient temperature (C),37.11,-20.4967
+MLP,Exhaust vacuum (cm Hg),25.36,4.3812
+MLP,Exhaust vacuum (cm Hg),38.73,4.3671
+MLP,Exhaust vacuum (cm Hg),39.72,4.3636
+MLP,Exhaust vacuum (cm Hg),40.64,4.2048
+MLP,Exhaust vacuum (cm Hg),41.16,4.1869
+MLP,Exhaust vacuum (cm Hg),41.7,4.1502
+MLP,Exhaust vacuum (cm Hg),43.02,3.8349
+MLP,Exhaust vacuum (cm Hg),44.2,3.1544
+MLP,Exhaust vacuum (cm Hg),45.09,2.9294
+MLP,Exhaust vacuum (cm Hg),49.15,1.0073
+MLP,Exhaust vacuum (cm Hg),52.08,0.5726
+MLP,Exhaust vacuum (cm Hg),57.76,-1.8516
+MLP,Exhaust vacuum (cm Hg),59.39,-1.9943
+MLP,Exhaust vacuum (cm Hg),61.86,-1.9803
+MLP,Exhaust vacuum (cm Hg),64.27,-2.5482
+MLP,Exhaust vacuum (cm Hg),66.51,-3.997
+MLP,Exhaust vacuum (cm Hg),68.3,-5.0199
+MLP,Exhaust vacuum (cm Hg),69.89,-5.6675
+MLP,Exhaust vacuum (cm Hg),71.43,-5.7865
+MLP,Exhaust vacuum (cm Hg),73.67,-5.1655
+MLP,Exhaust vacuum (cm Hg),81.56,-2.4051
+MLP,Ambient pressure (mbar),992.89,-1.9129
+MLP,Ambient pressure (mbar),1003.97,-1.8751
+MLP,Ambient pressure (mbar),1006.0,-1.0596
+MLP,Ambient pressure (mbar),1007.25,-0.8153
+MLP,Ambient pressure (mbar),1008.15,-0.7063
+MLP,Ambient pressure (mbar),1009.07,-0.5831
+MLP,Ambient pressure (mbar),1009.86,-0.3318
+MLP,Ambient pressure (mbar),1010.71,-0.0887
+MLP,Ambient pressure (mbar),1011.37,0.049
+MLP,Ambient pressure (mbar),1012.19,0.2402
+MLP,Ambient pressure (mbar),1012.92,0.4552
+MLP,Ambient pressure (mbar),1013.56,0.6516
+MLP,Ambient pressure (mbar),1014.31,0.8414
+MLP,Ambient pressure (mbar),1015.21,0.8506
+MLP,Ambient pressure (mbar),1016.21,0.6923
+MLP,Ambient pressure (mbar),1017.22,0.289
+MLP,Ambient pressure (mbar),1018.13,0.0677
+MLP,Ambient pressure (mbar),1019.56,0.2864
+MLP,Ambient pressure (mbar),1020.84,1.0876
+MLP,Ambient pressure (mbar),1023.48,1.3539
+MLP,Ambient pressure (mbar),1033.3,-0.8621
+MLP,Relative humidity (%),25.89,3.4981
+MLP,Relative humidity (%),46.52,2.2696
+MLP,Relative humidity (%),52.69,2.0019
+MLP,Relative humidity (%),56.7,1.6351
+MLP,Relative humidity (%),60.36,1.3188
+MLP,Relative humidity (%),63.33,1.0926
+MLP,Relative humidity (%),65.95,0.8839
+MLP,Relative humidity (%),68.37,0.6828
+MLP,Relative humidity (%),70.61,0.4184
+MLP,Relative humidity (%),72.85,0.1411
+MLP,Relative humidity (%),74.89,-0.1586
+MLP,Relative humidity (%),76.92,-0.4176
+MLP,Relative humidity (%),78.92,-0.5983
+MLP,Relative humidity (%),81.1,-0.7657
+MLP,Relative humidity (%),82.93,-0.8307
+MLP,Relative humidity (%),84.83,-0.977
+MLP,Relative humidity (%),86.66,-1.144
+MLP,Relative humidity (%),88.68,-1.38
+MLP,Relative humidity (%),91.02,-1.7902
+MLP,Relative humidity (%),94.72,-2.4628
+MLP,Relative humidity (%),100.0,-3.3834

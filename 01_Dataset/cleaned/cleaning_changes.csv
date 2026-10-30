@@ -1,0 +1,97 @@
+raw_index,column,old_value,new_value,action
+2184,all,,,row removed: exact duplicate of raw_index 1844
+2421,all,,,row removed: exact duplicate of raw_index 1482
+2577,all,,,row removed: exact duplicate of raw_index 2152
+2896,all,,,row removed: exact duplicate of raw_index 1291
+3314,all,,,row removed: exact duplicate of raw_index 3059
+4236,all,,,row removed: exact duplicate of raw_index 3828
+4549,all,,,row removed: exact duplicate of raw_index 4472
+4577,all,,,row removed: exact duplicate of raw_index 2636
+4667,all,,,row removed: exact duplicate of raw_index 468
+5276,all,,,row removed: exact duplicate of raw_index 352
+5320,all,,,row removed: exact duplicate of raw_index 5045
+5467,all,,,row removed: exact duplicate of raw_index 3816
+5498,all,,,row removed: exact duplicate of raw_index 806
+5615,all,,,row removed: exact duplicate of raw_index 4819
+5828,all,,,row removed: exact duplicate of raw_index 2482
+5933,all,,,row removed: exact duplicate of raw_index 2140
+5955,all,,,row removed: exact duplicate of raw_index 3250
+6008,all,,,row removed: exact duplicate of raw_index 1186
+6131,all,,,row removed: exact duplicate of raw_index 4261
+6227,all,,,row removed: exact duplicate of raw_index 3245
+6826,all,,,row removed: exact duplicate of raw_index 5967
+6883,all,,,row removed: exact duplicate of raw_index 4085
+7410,all,,,row removed: exact duplicate of raw_index 1590
+7604,all,,,row removed: exact duplicate of raw_index 345
+7758,all,,,row removed: exact duplicate of raw_index 2595
+7769,all,,,row removed: exact duplicate of raw_index 231
+7771,all,,,row removed: exact duplicate of raw_index 3502
+8105,all,,,row removed: exact duplicate of raw_index 7422
+8499,all,,,row removed: exact duplicate of raw_index 3495
+8523,all,,,row removed: exact duplicate of raw_index 7289
+8639,all,,,row removed: exact duplicate of raw_index 7130
+8685,all,,,row removed: exact duplicate of raw_index 1632
+8821,all,,,row removed: exact duplicate of raw_index 7405
+8882,all,,,row removed: exact duplicate of raw_index 2649
+9000,all,,,row removed: exact duplicate of raw_index 3231
+9097,all,,,row removed: exact duplicate of raw_index 4613
+9138,all,,,row removed: exact duplicate of raw_index 726
+9147,all,,,row removed: exact duplicate of raw_index 2358
+9201,all,,,row removed: exact duplicate of raw_index 3814
+9345,all,,,row removed: exact duplicate of raw_index 1551
+9523,all,,,row removed: exact duplicate of raw_index 9350
+124,RH,100.12,100.0,capped at the physical limit
+166,RH,100.09,100.0,capped at the physical limit
+179,RH,100.09,100.0,capped at the physical limit
+297,RH,100.09,100.0,capped at the physical limit
+379,RH,100.15,100.0,capped at the physical limit
+711,RH,100.13,100.0,capped at the physical limit
+1013,RH,100.09,100.0,capped at the physical limit
+1829,RH,100.09,100.0,capped at the physical limit
+2338,RH,100.09,100.0,capped at the physical limit
+2784,RH,100.09,100.0,capped at the physical limit
+2793,RH,100.09,100.0,capped at the physical limit
+2991,RH,100.13,100.0,capped at the physical limit
+3125,RH,100.15,100.0,capped at the physical limit
+3143,RH,100.09,100.0,capped at the physical limit
+3216,RH,100.09,100.0,capped at the physical limit
+3691,RH,100.11,100.0,capped at the physical limit
+3768,RH,100.09,100.0,capped at the physical limit
+3769,RH,100.07,100.0,capped at the physical limit
+4035,RH,100.09,100.0,capped at the physical limit
+4519,RH,100.1,100.0,capped at the physical limit
+5099,RH,100.09,100.0,capped at the physical limit
+5412,RH,100.1,100.0,capped at the physical limit
+5556,RH,100.09,100.0,capped at the physical limit
+5613,RH,100.09,100.0,capped at the physical limit
+5618,RH,100.09,100.0,capped at the physical limit
+5892,RH,100.16,100.0,capped at the physical limit
+6066,RH,100.11,100.0,capped at the physical limit
+6119,RH,100.12,100.0,capped at the physical limit
+6256,RH,100.11,100.0,capped at the physical limit
+6301,RH,100.09,100.0,capped at the physical limit
+6526,RH,100.13,100.0,capped at the physical limit
+6745,RH,100.09,100.0,capped at the physical limit
+6860,RH,100.09,100.0,capped at the physical limit
+6970,RH,100.09,100.0,capped at the physical limit
+7005,RH,100.12,100.0,capped at the physical limit
+7518,RH,100.13,100.0,capped at the physical limit
+7551,RH,100.1,100.0,capped at the physical limit
+7806,RH,100.09,100.0,capped at the physical limit
+7893,RH,100.07,100.0,capped at the physical limit
+8050,RH,100.09,100.0,capped at the physical limit
+8214,RH,100.13,100.0,capped at the physical limit
+8464,RH,100.1,100.0,capped at the physical limit
+8571,RH,100.1,100.0,capped at the physical limit
+8654,RH,100.09,100.0,capped at the physical limit
+8682,RH,100.12,100.0,capped at the physical limit
+8739,RH,100.13,100.0,capped at the physical limit
+8894,RH,100.13,100.0,capped at the physical limit
+8909,RH,100.14,100.0,capped at the physical limit
+8972,RH,100.09,100.0,capped at the physical limit
+9043,RH,100.09,100.0,capped at the physical limit
+9094,RH,100.06,100.0,capped at the physical limit
+9134,RH,100.15,100.0,capped at the physical limit
+9264,RH,100.07,100.0,capped at the physical limit
+9509,RH,100.1,100.0,capped at the physical limit
+9512,RH,100.09,100.0,capped at the physical limit
