@@ -48,7 +48,7 @@ All three models beat the best published result on this dataset. The published s
 - `03_Dashboard`: the Tableau workbook (`CCPP_dashboard.twbx`), the seven CSV files it reads, five screenshots and a narrated 2:49 walkthrough video.
 - `04_Report`: the technical report (PDF, 35 pages).
 - `05_Presentation_and_Poster`: the slides (15) and an A1 poster, as PDF.
-- `web`: the predictor website (plain HTML, CSS and JavaScript, no build step). `web/data/model.json` is written by `scripts/web_export.py`, which refits the models and checks them against the notebook's saved predictions. `scripts/web_check.mjs` checks the browser model against the Python predictions. The site is hosted on Vercel and every push to `main` redeploys it.
+- `web`: the predictor website (plain HTML, CSS and JavaScript, no build step). `web/data/model.json` is written by `scripts/web_export.py`, which refits the models and checks them against the notebook's saved predictions. `scripts/web_check.mjs` checks the browser model against the Python predictions. `scripts/build_web_files.py` copies the report and an HTML version of the notebook into `web/files` so phones can open them. The site is hosted on Vercel and every push to `main` redeploys it.
 
 ## How to run
 
