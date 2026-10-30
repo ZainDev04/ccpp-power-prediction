@@ -2,6 +2,10 @@
 
 This project predicts the hourly net electrical output (MW) of a combined cycle power plant running at full load. The inputs are four measurements: ambient temperature, exhaust vacuum, ambient pressure and relative humidity. It uses 9,568 hours of real plant data from the UCI Machine Learning Repository and compares three machine learning models. The best model then drives two plant decisions, a performance alarm and a safety margin for grid commitments, both shown in an interactive Tableau Public dashboard.
 
+**Try it: [ccpp-power-prediction.vercel.app](https://ccpp-power-prediction.vercel.app)**. Set the weather and the condenser reading, and the site predicts the plant's output, shows the six past hours behind the prediction, flags conditions outside the data, and checks for underperformance. The model runs in the browser and gives the same predictions as the Python model on all 1,906 test hours.
+
+[![The plant output predictor](web/preview.png)](https://ccpp-power-prediction.vercel.app)
+
 ![Decision support dashboard](03_Dashboard/screenshots/dashboard3_decisions.png)
 
 Live dashboard on Tableau Public:
@@ -44,6 +48,7 @@ All three models beat the best published result on this dataset. The published s
 - `03_Dashboard`: the Tableau workbook (`CCPP_dashboard.twbx`), the seven CSV files it reads, five screenshots and a narrated 2:49 walkthrough video.
 - `04_Report`: the technical report (PDF, 35 pages).
 - `05_Presentation_and_Poster`: the slides (15) and an A1 poster, as PDF.
+- `web`: the predictor website (plain HTML, CSS and JavaScript, no build step). `web/data/model.json` is written by `scripts/web_export.py`, which refits the models and checks them against the notebook's saved predictions. `scripts/web_check.mjs` checks the browser model against the Python predictions.
 
 ## How to run
 

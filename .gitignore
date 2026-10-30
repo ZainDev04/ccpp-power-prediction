@@ -5,3 +5,5 @@ __pycache__/
 Thumbs.db
 ~$*
 *.twbr
+.vercel/
+scripts/web_fixture.json
