@@ -42,7 +42,7 @@ All three models beat the best published result on this dataset. The published s
 - `01_Dataset/cleaned`: the cleaned data and a row-by-row log of every change.
 - `02_Notebook`: `CCPP_Power_Prediction.ipynb`, the full analysis in 13 sections, saved with all outputs. `outputs/` holds the 25 figures and every CSV the notebook writes.
 - `03_Dashboard`: the Tableau workbook (`CCPP_dashboard.twbx`), the seven CSV files it reads, five screenshots and a narrated 2:49 walkthrough video.
-- `04_Report`: the technical report (PDF, 36 pages).
+- `04_Report`: the technical report (PDF, 35 pages).
 - `05_Presentation_and_Poster`: the slides (15) and an A1 poster, as PDF.
 
 ## How to run
